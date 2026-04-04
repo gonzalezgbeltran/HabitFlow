@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="HabitFlow"/>
+<meta name="theme-color" content="#0f0f1a"/>
+<title>HabitFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface2: #16213e;
+  --accent: #6c63ff;
+  --accent2: #a78bfa;
+  --green: #4ade80;
+  --yellow: #facc15;
+  --red: #f87171;
+  --text: #f1f0ff;
+  --text2: #9d9ab8;
+  --text3: #5a5880;
+  --border: rgba(108,99,255,0.18);
+  --border2: rgba(255,255,255,0.07);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --safe-top: env(safe-area-inset-top, 44px);
+  --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+
+/* ── ONBOARDING ── */
+#onboard {
+  position:fixed;inset:0;z-index:100;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 32px;
+  padding-top:calc(var(--safe-top) + 40px);
+}
+
+.ob-logo {
+  width:72px;height:72px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:22px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:28px;
+  box-shadow:0 0 40px rgba(108,99,255,0.4);
+}
+.ob-logo svg{width:36px;height:36px}
+
+.ob-title{
+  font-size:28px;font-weight:600;
+  text-align:center;margin-bottom:10px;
+  letter-spacing:-0.5px;
+}
+.ob-sub{
+  font-size:15px;color:var(--text2);
+  text-align:center;line-height:1.6;
+  margin-bottom:40px;
+}
+
+.ob-input {
+  width:100%;max-width:320px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:16px 20px;
+  font-size:16px;color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  outline:none;margin-bottom:14px;
+  transition:border-color .2s;
+}
+.ob-input:focus{border-color:var(--accent)}
+.ob-input::placeholder{color:var(--text3)}
+
+.ob-btn{
+  width:100%;max-width:320px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:var(--radius-sm);
+  padding:16px;color:#fff;
+  font-size:16px;font-weight:600;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;letter-spacing:0.3px;
+  box-shadow:0 4px 24px rgba(108,99,255,0.35);
+  transition:opacity .2s,transform .1s;
+}
+.ob-btn:active{opacity:.85;transform:scale(0.98)}
+
+/* ── MAIN APP ── */
+#app{
+  display:none;
+  flex-direction:column;
+  min-height:100vh;
+  min-height:100dvh;
+  padding-top:var(--safe-top);
+  padding-bottom:calc(var(--safe-bottom) + 80px);
+}
+
+/* ── HEADER ── */
+.header{
+  padding:20px 24px 0;
+  position:relative;
+}
+.header-row{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.greeting{font-size:14px;color:var(--text2);margin-bottom:3px}
+.username{font-size:26px;font-weight:600;letter-spacing:-0.5px}
+
+.hist-btn{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text2);
+  transition:background .2s,border-color .2s;
+  flex-shrink:0;
+}
+.hist-btn:active{background:var(--surface2)}
+
+.date-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px;padding:6px 14px;
+  font-size:13px;color:var(--text2);
+  font-family:'DM Mono',monospace;
+}
+
+/* ── PROGRESS CARD ── */
+.prog-card{
+  margin:16px 24px 0;
+  background:linear-gradient(135deg,#1e1b4b,#1a1a2e);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+}
+.prog-top{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;margin-bottom:14px;
+}
+.prog-info{}
+.prog-label{font-size:12px;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px}
+.prog-pct{
+  font-size:36px;font-weight:600;
+  font-family:'DM Mono',monospace;
+  letter-spacing:-1px;
+}
+.prog-done{font-size:13px;color:var(--text2);margin-top:2px}
+
+.prog-ring{position:relative;width:52px;height:52px}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring circle{fill:none;stroke-width:5}
+.ring-bg{stroke:rgba(255,255,255,0.07)}
+.ring-fill{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .4s}
+
+.prog-bar-bg{
+  height:6px;background:rgba(255,255,255,0.08);
+  border-radius:3px;overflow:hidden;
+}
+.prog-bar-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .5s ease;
+}
+
+/* ── CONTENT ── */
+.content{
+  flex:1;
+  padding:20px 24px 0;
+  overflow-y:auto;
+}
+
+.section-hd{
+  font-size:11px;font-weight:600;
+  color:var(--text3);letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:12px;
+}
+
+/* ── HABITS ── */
+.habits-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+
+.empty-state{
+  text-align:center;
+  padding:32px 0;
+  color:var(--text2);
+  font-size:14px;
+  line-height:1.8;
+}
+.empty-state span{display:block;font-size:28px;margin-bottom:8px;opacity:.5}
+
+.habit-item{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  transition:all .2s;
+}
+.habit-item.done{
+  background:rgba(108,99,255,0.07);
+  border-color:rgba(108,99,255,0.25);
+}
+
+.habit-check{
+  width:28px;height:28px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;cursor:pointer;
+  transition:all .2s;
+  background:transparent;
+}
+.habit-check.checked{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+.habit-check svg{opacity:0;transition:opacity .15s}
+.habit-check.checked svg{opacity:1}
+
+.habit-name{
+  flex:1;font-size:15px;font-weight:400;
+  transition:color .2s;
+}
+.habit-item.done .habit-name{
+  color:var(--text3);
+  text-decoration:line-through;
+  text-decoration-color:var(--text3);
+}
+
+.habit-del{
+  background:none;border:none;
+  color:var(--text3);cursor:pointer;
+  width:28px;height:28px;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .15s;
+  flex-shrink:0;
+}
+.habit-del:active{color:var(--red);background:rgba(248,113,113,0.12)}
+
+/* ── ADD FORM ── */
+.add-card{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:12px;
+}
+.add-row{display:flex;gap:10px}
+.add-input{
+  flex:1;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  padding:13px 16px;
+  font-size:15px;color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.add-input:focus{border-color:var(--accent)}
+.add-input::placeholder{color:var(--text3)}
+.add-btn{
+  background:var(--accent);
+  border:none;border-radius:var(--radius-sm);
+  padding:13px 18px;
+  font-size:14px;font-weight:600;color:#fff;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;white-space:nowrap;
+  transition:opacity .15s,transform .1s;
+}
+.add-btn:active{opacity:.8;transform:scale(0.97)}
+.add-btn:disabled{opacity:.35;cursor:not-allowed}
+.limit-msg{
+  font-size:12px;color:var(--text3);
+  margin-top:10px;text-align:center;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(68px + var(--safe-bottom));
+  background:rgba(15,15,26,0.95);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border2);
+  display:flex;align-items:flex-start;
+  padding-top:10px;
+}
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:4px;cursor:pointer;
+  padding:4px 0;
+}
+.nav-icon{
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);transition:color .2s;
+}
+.nav-label{font-size:10px;color:var(--text3);transition:color .2s}
+.nav-tab.active .nav-icon,.nav-tab.active .nav-label{color:var(--accent2)}
+
+/* ── HISTORY PAGE ── */
+#historyPage{display:none;flex-direction:column;flex:1;padding:20px 24px 0}
+
+.hist-empty{
+  text-align:center;padding:48px 0;
+  color:var(--text2);font-size:14px;line-height:1.8;
+}
+.hist-empty span{display:block;font-size:32px;margin-bottom:10px;opacity:.4}
+
+.hist-list{display:flex;flex-direction:column;gap:10px}
+.hist-item{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.hist-date{font-size:14px;font-weight:500}
+.hist-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.hist-badge{
+  padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:600;
+  font-family:'DM Mono',monospace;
+}
+.badge-green{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.25)}
+.badge-yellow{background:rgba(250,204,21,0.15);color:#facc15;border:1px solid rgba(250,204,21,0.25)}
+.badge-red{background:rgba(248,113,113,0.15);color:#f87171;border:1px solid rgba(248,113,113,0.25)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.habit-item{animation:fadeIn .2s ease}
+
+/* ── SPLASH ── */
+#splash{
+  position:fixed;inset:0;z-index:200;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:16px;
+}
+.splash-logo{
+  width:80px;height:80px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 50px rgba(108,99,255,0.4);
+  animation:pulse 1.5s ease infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 30px rgba(108,99,255,.3)}50%{box-shadow:0 0 60px rgba(108,99,255,.6)}}
+.splash-name{font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.5px}
+.splash-tagline{font-size:13px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+  </div>
+  <div class="splash-name">HabitFlow</div>
+  <div class="splash-tagline">Tu rutina diaria, simplificada</div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboard" style="display:none">
+  <div class="ob-logo">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+  </div>
+  <div class="ob-title">Bienvenido a HabitFlow</div>
+  <div class="ob-sub">Construye hábitos poderosos,<br>un día a la vez.</div>
+  <input class="ob-input" id="nameInput" type="text" placeholder="¿Cómo te llamas?" maxlength="20" autocomplete="off"/>
+  <button class="ob-btn" onclick="startApp()">Empezar ahora</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- HOME PAGE -->
+  <div id="homePage" style="display:flex;flex-direction:column;flex:1">
+    <div class="header">
+      <div class="header-row">
+        <div>
+          <div class="greeting" id="greetingText">Buenas noches,</div>
+          <div class="username" id="usernameDisplay">Usuario</div>
+        </div>
+        <button class="hist-btn" onclick="switchTab('history')" title="Historial">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </button>
+      </div>
+      <div class="date-tag" style="margin-top:8px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        <span id="dateDisplay">—</span>
+      </div>
+    </div>
+
+    <div class="prog-card">
+      <div class="prog-top">
+        <div class="prog-info">
+          <div class="prog-label">Progreso del día</div>
+          <div class="prog-pct" id="pctDisplay">0%</div>
+          <div class="prog-done" id="doneDisplay">0 de 0 hábitos</div>
+        </div>
+        <div class="prog-ring">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle class="ring-bg" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="0"/>
+            <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="prog-bar-bg">
+        <div class="prog-bar-fill" id="progBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="content" id="homeContent">
+      <div class="section-hd">Mis hábitos</div>
+      <div class="habits-list" id="habitsList"></div>
+
+      <div class="section-hd">Añadir hábito</div>
+      <div class="add-card">
+        <div class="add-row">
+          <input class="add-input" id="habitInput" type="text" placeholder="Nombre del hábito..." maxlength="40" autocomplete="off"/>
+          <button class="add-btn" id="addBtn" onclick="addHabit()">Añadir</button>
+        </div>
+        <div class="limit-msg" id="limitMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY PAGE -->
+  <div id="historyPage">
+    <div class="header" style="padding-bottom:20px">
+      <div class="header-row">
+        <div>
+          <div class="greeting">Registro de</div>
+          <div class="username">Historial</div>
+        </div>
+        <button class="hist-btn" onclick="switchTab('home')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div style="padding:0 24px;flex:1;overflow-y:auto">
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-tab active" id="tabHome" onclick="switchTab('home')">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div class="nav-label">Hábitos</div>
+    </div>
+    <div class="nav-tab" id="tabHistory" onclick="switchTab('history')">
+      <div class="nav-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/>
+        </svg>
+      </div>
+      <div class="nav-label">Historial</div>
+    </div>
+  </nav>
+</div>
+
+<script>
+let state = {users:{}, currentUser:null};
+
+const DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function getToday(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDate(iso){
+  const [y,m,d] = iso.split('-');
+  const date = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+  return `${DAYS[date.getDay()]} ${parseInt(d)} de ${MONTHS[parseInt(m)-1]}`;
+}
+
+function getGreeting(){
+  const h = new Date().getHours();
+  if(h < 12) return 'Buenos días,';
+  if(h < 20) return 'Buenas tardes,';
+  return 'Buenas noches,';
+}
+
+function load(){
+  try {
+    const s = localStorage.getItem('habitflow_v2');
+    if(s) state = JSON.parse(s);
+  } catch(e){}
+}
+
+function save(){
+  try { localStorage.setItem('habitflow_v2', JSON.stringify(state)); } catch(e){}
+}
+
+function startApp(){
+  const n = document.getElementById('nameInput').value.trim();
+  if(!n) { document.getElementById('nameInput').focus(); return; }
+  state.currentUser = n;
+  if(!state.users[n]) state.users[n] = {habits:[], history:{}, lastDay:null};
+  save();
+  document.getElementById('onboard').style.display = 'none';
+  showApp();
+}
+
+function showApp(){
+  const u = currentUser();
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('app').style.flexDirection = 'column';
+  document.getElementById('usernameDisplay').textContent = state.currentUser;
+  document.getElementById('greetingText').textContent = getGreeting();
+  const today = getToday();
+  const d = new Date();
+  document.getElementById('dateDisplay').textContent = `${DAYS[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()]}`;
+  maybeSaveYesterday();
+  renderHabits();
+  updateProgress();
+}
+
+function currentUser(){ return state.users[state.currentUser]; }
+
+function maybeSaveYesterday(){
+  const u = currentUser();
+  const today = getToday();
+  if(u.lastDay && u.lastDay !== today && !u.history[u.lastDay]){
+    const t = u.habits.length;
+    const c = u.habits.filter(h=>h.done).length;
+    u.history[u.lastDay] = t > 0 ? Math.round((c/t)*100) : 0;
+    u.habits.forEach(h => h.done = false);
+  }
+  u.lastDay = today;
+  save();
+}
+
+function renderHabits(){
+  const u = currentUser();
+  const list = document.getElementById('habitsList');
+  list.innerHTML = '';
+  if(u.habits.length === 0){
+    list.innerHTML = '<div class="empty-state"><span>✦</span>Aún no tienes hábitos.<br>¡Añade el primero abajo!</div>';
+    return;
+  }
+  u.habits.forEach((h,i) => {
+    const el = document.createElement('div');
+    el.className = 'habit-item' + (h.done ? ' done' : '');
+    el.innerHTML = `
+      <div class="habit-check${h.done?' checked':''}" onclick="toggle(${i})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20,6 9,17 4,12"/>
+        </svg>
+      </div>
+      <span class="habit-name">${escHtml(h.name)}</span>
+      <button class="habit-del" onclick="delHabit(${i})">✕</button>
+    `;
+    list.appendChild(el);
+  });
+  const addBtn = document.getElementById('addBtn');
+  const limitMsg = document.getElementById('limitMsg');
+  if(u.habits.length >= 10){
+    addBtn.disabled = true;
+    limitMsg.textContent = 'Límite de 10 hábitos alcanzado.';
+  } else {
+    addBtn.disabled = false;
+    limitMsg.textContent = '';
+  }
+}
+
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function toggle(i){
+  const u = currentUser();
+  u.habits[i].done = !u.habits[i].done;
+  save(); renderHabits(); updateProgress();
+}
+
+function delHabit(i){
+  const u = currentUser();
+  u.habits.splice(i,1);
+  save(); renderHabits(); updateProgress();
+}
+
+function addHabit(){
+  const u = currentUser();
+  if(u.habits.length >= 10) return;
+  const inp = document.getElementById('habitInput');
+  const n = inp.value.trim();
+  if(!n) return;
+  u.habits.push({name:n, done:false});
+  inp.value = '';
+  save(); renderHabits(); updateProgress();
+}
+
+function updateProgress(){
+  const u = currentUser();
+  const total = u.habits.length;
+  const done = u.habits.filter(h=>h.done).length;
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  document.getElementById('pctDisplay').textContent = pct + '%';
+  document.getElementById('doneDisplay').textContent = `${done} de ${total} hábito${total!==1?'s':''}`;
+  document.getElementById('progBar').style.width = pct + '%';
+
+  const color = pct >= 85 ? '#4ade80' : pct >= 50 ? '#facc15' : '#f87171';
+  document.querySelector('.prog-bar-fill').style.background = pct >= 85
+    ? 'linear-gradient(90deg,#4ade80,#22d3ee)'
+    : pct >= 50 ? 'linear-gradient(90deg,#facc15,#fb923c)'
+    : 'linear-gradient(90deg,#f87171,#ec4899)';
+
+  const circumference = 138.2;
+  const offset = circumference - (pct / 100) * circumference;
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+  document.getElementById('ringFill').style.stroke = color;
+}
+
+function switchTab(tab){
+  const home = document.getElementById('homePage');
+  const hist = document.getElementById('historyPage');
+  const tabHome = document.getElementById('tabHome');
+  const tabHist = document.getElementById('tabHistory');
+  if(tab === 'home'){
+    home.style.display = 'flex'; home.style.flexDirection = 'column';
+    hist.style.display = 'none';
+    tabHome.classList.add('active'); tabHist.classList.remove('active');
+  } else {
+    home.style.display = 'none';
+    hist.style.display = 'flex'; hist.style.flexDirection = 'column';
+    tabHome.classList.remove('active'); tabHist.classList.add('active');
+    renderHistory();
+  }
+}
+
+function renderHistory(){
+  const u = currentUser();
+  const list = document.getElementById('historyList');
+  const entries = Object.entries(u.history).sort((a,b) => b[0].localeCompare(a[0]));
+  if(entries.length === 0){
+    list.innerHTML = '<div class="hist-empty"><span>📅</span>Aún no hay días registrados.<br>El historial se guardará automáticamente<br>al pasar al día siguiente.</div>';
+    return;
+  }
+  list.innerHTML = '<div class="hist-list">' + entries.map(([date, pct]) => {
+    const cls = pct >= 85 ? 'badge-green' : pct >= 50 ? 'badge-yellow' : 'badge-red';
+    return `<div class="hist-item">
+      <div>
+        <div class="hist-date">${formatDate(date)}</div>
+        <div class="hist-sub">${pct >= 85 ? '¡Excelente día!' : pct >= 50 ? 'Buen intento' : 'Puedes mejorar'}</div>
+      </div>
+      <div class="hist-badge ${cls}">${pct}%</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+document.getElementById('habitInput').addEventListener('keydown', e => { if(e.key === 'Enter') addHabit(); });
+document.getElementById('nameInput').addEventListener('keydown', e => { if(e.key === 'Enter') startApp(); });
+
+// Init
+load();
+setTimeout(() => {
+  document.getElementById('splash').style.opacity = '0';
+  document.getElementById('splash').style.transition = 'opacity .4s';
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
+    if(state.currentUser && state.users[state.currentUser]){
+      showApp();
+    } else {
+      document.getElementById('onboard').style.display = 'flex';
+    }
+  }, 400);
+}, 1400);
+</script>
+
+<!-- PWA MANIFEST inline -->
+<script>
+const manifest = {
+  name: "HabitFlow",
+  short_name: "HabitFlow",
+  description: "Seguimiento de hábitos diarios",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#0f0f1a",
+  theme_color: "#0f0f1a",
+  orientation: "portrait",
+  icons: [{
+    src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236c63ff'/><stop offset='1' stop-color='%23a78bfa'/></linearGradient></defs><polyline points='72,96 96,120 164,52' stroke='white' stroke-width='14' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M156 96v56a16 16 0 0 1-16 16H52a16 16 0 0 1-16-16V52a16 16 0 0 1 16-16h72' stroke='white' stroke-width='14' stroke-linecap='round' fill='none'/></svg>`),
+    sizes: "192x192",
+    type: "image/svg+xml",
+    purpose: "any maskable"
+  }]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+const url = URL.createObjectURL(blob);
+const link = document.createElement('link');
+link.rel = 'manifest'; link.href = url;
+document.head.appendChild(link);
+</script>
+</body>
+</html>
